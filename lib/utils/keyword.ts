@@ -1,5 +1,3 @@
-import { NaverKeywordData } from '@/types/naver'
-
 /**
  * 키워드 품질 판단
  */
@@ -21,8 +19,7 @@ export function getKeywordQuality(
  * 추천 메시지 생성
  */
 export function getRecommendationMessage(
-  score: number,
-  competition: string
+  score: number
 ): string {
   if (score >= 80) {
     return '🎯 즉시 작성을 추천합니다!'
