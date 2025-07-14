@@ -51,14 +51,24 @@ export default function TestNaver() {
   return (
     <div className="max-w-4xl mx-auto p-8">
       <h1 className="text-2xl font-bold mb-6">네이버 API 테스트</h1>
-      
+
+      <div className="mb-4 p-4 bg-yellow-50 text-yellow-800 rounded-md">
+        <p className="font-semibold">디버깅 정보:</p>
+        <p>API 엔드포인트: https://api.searchad.naver.com/keywordstool</p>
+        <p>Customer ID: 3506828</p>
+        <p>개발자 도구 {'>'} 콘솔에서 API 호출 로그를 확인하세요.</p>
+        <p className="text-sm mt-2">
+          <strong>테스트 팁:</strong> 단일 키워드와 공백 포함 키워드를 모두 테스트해보세요.
+        </p>
+      </div>
+
       <div className="mb-6">
         <div className="flex gap-2">
           <input
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && searchKeyword()}
+            onKeyDown={(e) => e.key === 'Enter' && searchKeyword()}
             placeholder="검색할 키워드를 입력하세요"
             className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -89,9 +99,9 @@ export default function TestNaver() {
             <div>
               <p className="text-sm text-gray-600">경쟁도</p>
               <p className="text-2xl font-bold">
-                {result.competition === '낮음' && '🟢'} 
-                {result.competition === '중간' && '🟡'} 
-                {result.competition === '높음' && '🔴'} 
+                {result.competition === '낮음' && '🟢'}
+                {result.competition === '중간' && '🟡'}
+                {result.competition === '높음' && '🔴'}
                 {result.competition}
               </p>
             </div>
