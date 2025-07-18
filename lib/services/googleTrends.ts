@@ -107,7 +107,7 @@ export class GoogleTrendsService {
         api_key: this.apiKey,
       });
 
-      const relatedQueries = results.related_queries?.top?.rankedKeyword || [];
+      const relatedQueries = results.related_queries?.top || [];
 
       return relatedQueries.map((item: any) => item.query);
 
