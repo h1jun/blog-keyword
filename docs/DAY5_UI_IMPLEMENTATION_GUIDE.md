@@ -81,7 +81,7 @@ export interface KeywordData {
   competition_level: string;
   cpc: number;
   score: number;
-  platform: 'google' | 'naver' | 'youtube';
+  platform: 'google' | 'naver';
   metadata?: Record<string, any>;
   created_at?: string;
   updated_at?: string;
@@ -91,7 +91,6 @@ export interface Stats {
   total: number;
   google: number;
   naver: number;
-  youtube: number;
   lowCompetition: number;
 }
 ```
@@ -232,7 +231,7 @@ export function CompetitionBadge({ level }: CompetitionBadgeProps) {
 #### 4.2 PlatformBadge 컴포넌트
 ```typescript
 // components/PlatformBadge.tsx
-import { Globe, Search, Youtube } from 'lucide-react';
+import { Globe, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PlatformBadgeProps {
@@ -253,12 +252,6 @@ export function PlatformBadge({ platform }: PlatformBadgeProps) {
           icon: Search,
           label: '네이버',
           className: 'bg-green-100 text-green-700'
-        };
-      case 'youtube':
-        return {
-          icon: Youtube,
-          label: 'YouTube',
-          className: 'bg-red-100 text-red-700'
         };
       default:
         return {
@@ -421,7 +414,7 @@ export function EmptyState({ message = "데이터가 없습니다" }: EmptyState
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, TrendingUp, Globe, Search as SearchIcon, Youtube, Download } from 'lucide-react';
+import { RefreshCw, TrendingUp, Globe, Search as SearchIcon, Download } from 'lucide-react';
 import { KeywordCard } from '@/components/KeywordCard';
 import { StatsCard } from '@/components/StatsCard';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
@@ -434,13 +427,12 @@ export default function DashboardPage() {
   const [filteredKeywords, setFilteredKeywords] = useState<KeywordData[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'google' | 'naver' | 'youtube'>('all');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'google' | 'naver'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [stats, setStats] = useState<Stats>({
     total: 0,
     google: 0,
     naver: 0,
-    youtube: 0,
     lowCompetition: 0,
   });
   
@@ -472,7 +464,6 @@ export default function DashboardPage() {
         total: keywordData.length,
         google: keywordData.filter(k => k.platform === 'google').length,
         naver: keywordData.filter(k => k.platform === 'naver').length,
-        youtube: keywordData.filter(k => k.platform === 'youtube').length,
         lowCompetition: keywordData.filter(k => k.competition_level === '낮음').length,
       });
       
@@ -596,19 +587,12 @@ export default function DashboardPage() {
           color="text-green-600"
           bgColor="bg-green-100"
         />
-        <StatsCard
-          title="YouTube 키워드"
-          value={stats.youtube}
-          icon={Youtube}
-          color="text-red-600"
-          bgColor="bg-red-100"
-        />
       </div>
       
       {/* 필터 및 검색 */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex gap-2">
-          {(['all', 'google', 'naver', 'youtube'] as const).map((filter) => (
+          {(['all', 'google', 'naver'] as const).map((filter) => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
