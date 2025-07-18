@@ -1,7 +1,7 @@
 export interface NaverKeywordData {
   relKeyword: string
-  monthlyPcQcCnt: number | null
-  monthlyMobileQcCnt: number | null
+  monthlyPcQcCnt: number | string | null
+  monthlyMobileQcCnt: number | string | null
   monthlyAvePcClkCnt: number | null
   monthlyAveMobileClkCnt: number | null
   monthlyAvePcCtr: number | null

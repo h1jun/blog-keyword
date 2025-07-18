@@ -71,7 +71,7 @@ export default function TestLongtail() {
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && generateLongtails()}
+            onKeyDown={(e) => e.key === 'Enter' && generateLongtails()}
             placeholder="시드 키워드를 입력하세요"
             className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -140,6 +140,37 @@ export default function TestLongtail() {
           ))}
         </div>
       )}
+
+      {/* 점수 계산 로직 설명 */}
+      <div className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <h3 className="text-lg font-semibold mb-4">점수 계산 로직 설명</h3>
+        <div className="space-y-3 text-sm">
+          <div>
+            <p className="font-medium mb-2">기본 점수 (경쟁도 기준):</p>
+            <ul className="ml-4 space-y-1">
+              <li>• <span className="font-medium text-green-600">낮음</span>: 85점 (경쟁이 적어서 상위 노출이 쉬움)</li>
+              <li>• <span className="font-medium text-yellow-600">중간</span>: 55점 (적당한 경쟁)</li>
+              <li>• <span className="font-medium text-red-600">높음</span>: 25점 (경쟁이 치열해서 상위 노출 어려움)</li>
+            </ul>
+          </div>
+          
+          <div>
+            <p className="font-medium mb-2">검색량 보정:</p>
+            <ul className="ml-4 space-y-1">
+              <li>• 100 미만: -10점 (검색량이 너무 적음)</li>
+              <li>• 10,000 초과: +5점 (검색량이 많아서 가치 있음)</li>
+            </ul>
+          </div>
+          
+          <div className="pt-2 border-t">
+            <p className="font-medium text-blue-600">결과 해석:</p>
+            <ul className="ml-4 space-y-1">
+              <li>• <span className="font-medium">높은 점수</span>: 경쟁 낮고 + 적절한 검색량 = 타겟하기 좋은 키워드</li>
+              <li>• <span className="font-medium">낮은 점수</span>: 경쟁 높거나 검색량 부족 = 피해야 할 키워드</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

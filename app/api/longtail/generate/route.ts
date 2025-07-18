@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { longtailGenerator } from '@/lib/services/longtailGenerator'
+import { supabase } from '@/lib/supabase'
 import { z } from 'zod'
 
 const requestSchema = z.object({
@@ -16,6 +17,27 @@ export async function POST(request: NextRequest) {
     const result = includeVolume
       ? await longtailGenerator.generateWithVolume(keyword)
       : await longtailGenerator.generateSimple(keyword)
+    
+    // Supabase에 저장
+    const longtailData = result.longtails.map(longtail => ({
+      parent_keyword: keyword,
+      longtail_keyword: longtail.keyword,
+      source: longtail.type,
+    }))
+    
+    if (longtailData.length > 0) {
+      const { error } = await supabase
+        .from('longtail_keywords')
+        .upsert(longtailData, {
+          onConflict: 'longtail_keyword',
+          ignoreDuplicates: true,
+        })
+      
+      if (error) {
+        console.error('롱테일 키워드 저장 실패:', error)
+        // 저장 실패해도 생성된 데이터는 반환
+      }
+    }
     
     return NextResponse.json({
       success: true,

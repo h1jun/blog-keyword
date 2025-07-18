@@ -152,9 +152,40 @@ export class NaverApiService {
    * 검색량 합계 계산
    */
   calculateTotalVolume(data: NaverKeywordData): number {
-    const pc = data.monthlyPcQcCnt || 0
-    const mobile = data.monthlyMobileQcCnt || 0
+    const pc = this.parseSearchVolume(data.monthlyPcQcCnt)
+    const mobile = this.parseSearchVolume(data.monthlyMobileQcCnt)
     return pc + mobile
+  }
+
+  /**
+   * 검색량 파싱 (< 10 같은 문자열 처리)
+   */
+  private parseSearchVolume(value: number | string | null): number {
+    if (!value) return 0
+    
+    // 숫자인 경우 그대로 반환
+    if (typeof value === 'number') return value
+    
+    // 문자열인 경우 파싱
+    if (typeof value === 'string') {
+      // "< 10" 같은 형태 처리
+      if (value.includes('<')) {
+        const match = value.match(/< (\d+)/)
+        return match ? parseInt(match[1]) / 2 : 5 // < 10이면 5로 추정
+      }
+      
+      // "> 1000" 같은 형태 처리
+      if (value.includes('>')) {
+        const match = value.match(/> (\d+)/)
+        return match ? parseInt(match[1]) * 1.5 : 1000 // > 1000이면 1500으로 추정
+      }
+      
+      // 일반 숫자 문자열
+      const parsed = parseInt(value.replace(/[^0-9]/g, ''))
+      return isNaN(parsed) ? 0 : parsed
+    }
+    
+    return 0
   }
 
   /**
