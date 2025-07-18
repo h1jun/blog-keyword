@@ -6,10 +6,10 @@ dotenv.config({ path: '.env.local' });
 
 async function testSerpApiTrends() {
   console.log('=== SerpAPI Google Trends 테스트 시작 ===\n');
-  
+
   // 서비스 인스턴스 생성
   const googleTrendsService = new GoogleTrendsService();
-  
+
   try {
     // 1. 일일 트렌드 테스트
     console.log('1. 일일 트렌드 수집 테스트');
@@ -19,26 +19,21 @@ async function testSerpApiTrends() {
     dailyTrends.trends.slice(0, 3).forEach((trend, i) => {
       console.log(`  ${i + 1}. ${trend.query} (${trend.traffic || 'N/A'})`);
     });
-    
-    // 2. 실시간 트렌드 테스트
-    console.log('\n2. 실시간 트렌드 수집 테스트');
-    const realtimeTrends = await googleTrendsService.getRealtimeTrends();
-    console.log(`- 수집된 실시간 트렌드 수: ${realtimeTrends.trends.length}`);
-    
-    // 3. 특정 키워드 트렌드 테스트
+
+    // 2. 특정 키워드 트렌드 테스트
     console.log('\n3. 키워드 트렌드 테스트');
     const keyword = '챗GPT';
     const interestData = await googleTrendsService.getInterestOverTime(keyword, '7d');
     console.log(`- "${keyword}" 관심도 데이터 포인트: ${interestData.data.length}개`);
-    
-    // 4. 연관 검색어 테스트
+
+    // 3. 연관 검색어 테스트
     console.log('\n4. 연관 검색어 테스트');
     const relatedQueries = await googleTrendsService.getRelatedQueries(keyword);
     console.log(`- "${keyword}" 연관 검색어: ${relatedQueries.length}개`);
     console.log(`- 상위 5개:`, relatedQueries.slice(0, 5));
-    
+
     console.log('\n=== 테스트 완료 ===');
-    
+
   } catch (error) {
     console.error('테스트 실패:', error);
     console.error('SERPAPI_KEY 환경 변수가 설정되었는지 확인하세요.');

@@ -20,12 +20,12 @@ export default function TestGoogleTrends() {
   const [keyword, setKeyword] = useState('')
   const [keywordResult, setKeywordResult] = useState<any>(null)
 
-  const fetchTrends = async (type: 'daily' | 'realtime' = 'daily') => {
+  const fetchTrends = async (type: 'daily') => {
     setLoading(true)
     try {
       const response = await fetch(`/api/google/trends?type=${type}`)
       const data = await response.json()
-      
+
       if (data.success) {
         setTrends(data.data)
         console.log('Google Trends 데이터:', data)
@@ -41,7 +41,7 @@ export default function TestGoogleTrends() {
 
   const searchKeyword = async () => {
     if (!keyword.trim()) return
-    
+
     setLoading(true)
     try {
       const response = await fetch('/api/google/trends', {
@@ -54,9 +54,9 @@ export default function TestGoogleTrends() {
           timeframe: '7d'
         })
       })
-      
+
       const data = await response.json()
-      
+
       if (data.success) {
         setKeywordResult(data.data)
         console.log('키워드 결과:', data.data)
@@ -73,7 +73,7 @@ export default function TestGoogleTrends() {
   return (
     <div className="max-w-6xl mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8">Google Trends 테스트</h1>
-      
+
       {/* 트렌드 수집 버튼 */}
       <div className="mb-8">
         <div className="flex gap-4 mb-4">
@@ -83,13 +83,6 @@ export default function TestGoogleTrends() {
             className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
           >
             {loading ? '로딩 중...' : '일일 트렌드 수집'}
-          </button>
-          <button
-            onClick={() => fetchTrends('realtime')}
-            disabled={loading}
-            className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:opacity-50"
-          >
-            {loading ? '로딩 중...' : '실시간 트렌드 수집'}
           </button>
         </div>
       </div>
