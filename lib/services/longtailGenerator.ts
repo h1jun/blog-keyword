@@ -65,7 +65,7 @@ export class LongtailGenerator {
    * 검색량 정보 추가
    */
   private async enrichWithSearchVolume(
-    keywords: Array<{ keyword: string; type: string }>
+    keywords: Array<{ keyword: string; type: 'pattern' | 'autocomplete' | 'related' }>
   ) {
     const enrichedKeywords = []
     
