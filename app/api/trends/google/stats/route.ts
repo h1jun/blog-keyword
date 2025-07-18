@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     const avgInterest = Math.round(
       keywords.reduce((sum, k) => sum + (k.score || 0), 0) / totalKeywords
     );
-    
+
     // 급상승/안정적 키워드 (임시로 점수 기준 분류)
     const risingKeywords = keywords.filter(k => (k.score || 0) > 50).length;
     const stableKeywords = totalKeywords - risingKeywords;
@@ -63,19 +63,6 @@ export async function GET(request: NextRequest) {
         value: k.score || 0
       }));
 
-    // 지역별 관심도 (임시 데이터)
-    const regionalInterest = [
-      { name: '서울', value: 100 },
-      { name: '부산', value: 85 },
-      { name: '대구', value: 78 },
-      { name: '인천', value: 72 },
-      { name: '광주', value: 65 },
-      { name: '대전', value: 68 },
-      { name: '울산', value: 58 },
-      { name: '세종', value: 62 },
-      { name: '경기', value: 95 },
-      { name: '강원', value: 45 }
-    ];
 
     return NextResponse.json({
       stats: {
@@ -87,7 +74,6 @@ export async function GET(request: NextRequest) {
       topKeywords,
       interestTrend,
       risingKeywords: risingKeywordsList,
-      regionalInterest
     });
 
   } catch (error) {
@@ -102,23 +88,23 @@ export async function GET(request: NextRequest) {
 function generateInterestTrend(range: string, baseInterest: number) {
   const months = range === '3m' ? 3 : range === '12m' ? 12 : 60;
   const data = [];
-  
+
   for (let i = months - 1; i >= 0; i--) {
     const date = new Date();
     date.setMonth(date.getMonth() - i);
-    
+
     // 임시 관심도 트렌드 데이터 생성
     const variation = (Math.random() - 0.5) * 0.4; // ±20% 변동
     const value = Math.round(baseInterest * (1 + variation));
-    
+
     data.push({
-      name: date.toLocaleDateString('ko-KR', { 
+      name: date.toLocaleDateString('ko-KR', {
         year: range === '5y' ? '2-digit' : undefined,
         month: 'short'
       }),
       value: Math.max(0, Math.min(100, value))
     });
   }
-  
+
   return data;
 }

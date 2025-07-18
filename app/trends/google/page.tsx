@@ -30,10 +30,6 @@ interface GoogleTrendData {
     name: string;
     value: number;
   }>;
-  regionalInterest: Array<{
-    name: string;
-    value: number;
-  }>;
 }
 
 export default function GoogleTrendsPage() {
@@ -89,7 +85,7 @@ export default function GoogleTrendsPage() {
             <h1 className="text-3xl font-bold text-gray-900">구글 트렌드 분석</h1>
             <p className="text-gray-600 mt-2">Google Trends API 기반 키워드 관심도 분석</p>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <select
               value={timeRange}
@@ -100,7 +96,7 @@ export default function GoogleTrendsPage() {
               <option value="12m">지난 12개월</option>
               <option value="5y">지난 5년</option>
             </select>
-            
+
             <button
               onClick={fetchGoogleTrends}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -165,16 +161,6 @@ export default function GoogleTrendsPage() {
           </div>
         </div>
 
-        {/* 지역별 관심도 */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <CustomBarChart
-            data={data.regionalInterest}
-            title="지역별 관심도"
-            color="#8B5CF6"
-            height={300}
-          />
-        </div>
-
         {/* 키워드 순위 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <KeywordRanking
@@ -182,7 +168,7 @@ export default function GoogleTrendsPage() {
             title="구글 트렌드 TOP 키워드"
             limit={10}
           />
-          
+
           {/* 관심도 상세 정보 */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h3 className="text-lg font-semibold mb-4 text-gray-800">관심도 분석</h3>
@@ -197,7 +183,7 @@ export default function GoogleTrendsPage() {
                 </div>
                 <span className="text-2xl font-bold text-blue-600">100점</span>
               </div>
-              
+
               <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <Globe className="h-6 w-6 text-green-600" />
@@ -208,7 +194,7 @@ export default function GoogleTrendsPage() {
                 </div>
                 <span className="text-2xl font-bold text-green-600">#15</span>
               </div>
-              
+
               <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <Star className="h-6 w-6 text-purple-600" />

@@ -41,8 +41,8 @@ export default function TestLongtail() {
         setLongtails(data.data.longtails)
         setSource(data.data.source)
       }
-    } catch (err) {
-      console.error('Error:', err)
+    } catch (error) {
+      console.error('Error:', error)
     } finally {
       setLoading(false)
     }

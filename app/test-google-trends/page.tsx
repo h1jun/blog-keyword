@@ -18,7 +18,10 @@ export default function TestGoogleTrends() {
   const [loading, setLoading] = useState(false)
   const [trends, setTrends] = useState<TrendData[]>([])
   const [keyword, setKeyword] = useState('')
-  const [keywordResult, setKeywordResult] = useState<any>(null)
+  const [keywordResult, setKeywordResult] = useState<{
+    interest?: { data?: unknown[] }
+    related?: string[]
+  } | null>(null)
 
   const fetchTrends = async (type: 'daily') => {
     setLoading(true)
