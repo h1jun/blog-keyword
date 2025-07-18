@@ -23,6 +23,9 @@ export async function POST(request: NextRequest) {
       parent_keyword: keyword,
       longtail_keyword: longtail.keyword,
       source: longtail.type,
+      search_volume: longtail.searchVolume || null,
+      competition_level: longtail.competition || null,
+      score: longtail.score || null,
     }))
     
     if (longtailData.length > 0) {
