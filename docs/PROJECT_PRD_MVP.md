@@ -9,7 +9,7 @@
 나 혼자 사용 (개인 블로그 운영자)
 
 ### **MVP 목표**
-- Google, 네이버, YouTube의 실시간 트렌드 데이터 기반 키워드 자동 수집
+- Google, 네이버의 실시간 트렌드 데이터 기반 키워드 자동 수집
 - 네이버 자동완성 API를 활용한 간단한 롱테일 키워드 확장
 - 실용적이고 즉시 사용 가능한 키워드 발굴
 
@@ -63,20 +63,36 @@ function getSimpleCompetitionScore(keywordData) {
 }
 ```
 
-### **3. YouTube 트렌드 (기본만)**
+### **3. 데이터 통합 및 중복 제거**
 
-#### **3.1 인기 급상승 동영상만 수집**
+#### **3.1 간단한 데이터 통합**
 ```javascript
-// 급상승 동영상 50개만 수집
-const response = await youtube.videos.list({
-  part: ['snippet'],
-  chart: 'mostPopular',
-  regionCode: 'KR',
-  maxResults: 50
-});
-
-// 제목과 태그에서 키워드 추출
-const keywords = extractSimpleKeywords(response.data.items);
+// 네이버 + Google Trends 데이터 통합
+function integrateKeywords(naverData, googleData) {
+  const integrated = [];
+  
+  // 네이버 데이터 우선 (실제 검색량 있음)
+  naverData.forEach(item => {
+    integrated.push({
+      ...item,
+      source: 'naver',
+      priority: 'high'
+    });
+  });
+  
+  // Google Trends 데이터 (중복 제거)
+  googleData.forEach(item => {
+    if (!integrated.find(existing => existing.keyword === item.keyword)) {
+      integrated.push({
+        ...item,
+        source: 'google',
+        priority: 'medium'
+      });
+    }
+  });
+  
+  return integrated;
+}
 ```
 
 ### **4. 롱테일 키워드 확장 (초간단 버전)**
@@ -168,7 +184,7 @@ CREATE TABLE keywords (
     competition_level VARCHAR(20),
     cpc INTEGER,
     score INTEGER,
-    platform VARCHAR(20), -- 'google', 'naver', 'youtube'
+    platform VARCHAR(20), -- 'google', 'naver'
     created_at TIMESTAMP DEFAULT NOW()
 );
 
@@ -208,7 +224,7 @@ CREATE TABLE longtail_keywords (
 │ 3. "2025 부동산 전망" 🔴                        │
 │    검색량: 45,200 | 경쟁도: 높음               │
 ├─────────────────────────────────────────────────┤
-│ 플랫폼: [전체] [Google] [네이버] [YouTube]      │
+│ 플랫폼: [전체] [Google] [네이버]                 │
 │ [CSV 다운로드]                                  │
 └─────────────────────────────────────────────────┘
 ```
@@ -248,16 +264,15 @@ CREATE TABLE longtail_keywords (
 
 ---
 
-## **📅 MVP 개발 일정 (1주일)**
+## **📅 MVP 개발 일정 (6일)**
 
 ### **빠른 구현 계획**
 - **Day 1**: Next.js 프로젝트 설정, Supabase 연동
 - **Day 2**: 네이버 검색광고 API 연동
 - **Day 3**: 네이버 자동완성 구현
 - **Day 4**: Google Trends 기본 연동 (SerpAPI 활용)
-- **Day 5**: YouTube API 연동
-- **Day 6**: UI 구현 (기본 대시보드)
-- **Day 7**: 테스트 및 배포
+- **Day 5**: UI 구현 (기본 대시보드)
+- **Day 6**: 통합 테스트 및 배포
 
 ---
 
@@ -273,8 +288,7 @@ export async function POST() {
   try {
     const results = {
       naver: [],
-      google: [],
-      youtube: []
+      google: []
     };
     
     // 1. 네이버 트렌드 키워드 수집 (예시)
@@ -298,19 +312,14 @@ export async function POST() {
     const googleTrends = await getGoogleDailyTrends();
     results.google = googleTrends.slice(0, 10);
     
-    // 3. YouTube 인기 동영상
-    const youtubeTrends = await getYouTubeTrends();
-    results.youtube = youtubeTrends.slice(0, 10);
-    
-    // 4. DB 저장
+    // 3. DB 저장
     await saveToDatabase(results);
     
     return NextResponse.json({ 
       success: true, 
       count: {
         naver: results.naver.length,
-        google: results.google.length,
-        youtube: results.youtube.length
+        google: results.google.length
       }
     });
     
@@ -465,12 +474,11 @@ function CompetitionBadge({ level }) {
 ## **📝 MVP 체크리스트**
 
 **개발 시작 전 준비사항**:
-- [ ] Supabase 프로젝트 생성
-- [ ] 네이버 검색광고 API 키 발급
-- [ ] SerpAPI 계정 생성 및 키 발급 (월 100회 무료)
-- [ ] YouTube Data API 키 발급
-- [ ] Next.js 프로젝트 생성
-- [ ] 환경변수 설정 (.env.local)
+- [x] Supabase 프로젝트 생성
+- [x] 네이버 검색광고 API 키 발급
+- [x] SerpAPI 계정 생성 및 키 발급 (월 100회 무료)
+- [x] Next.js 프로젝트 생성
+- [x] 환경변수 설정 (.env.local)
 
 ```bash
 # .env.local
@@ -480,7 +488,6 @@ NAVER_API_KEY=your_naver_api_key
 NAVER_SECRET_KEY=your_naver_secret_key
 NAVER_CUSTOMER_ID=your_customer_id
 SERPAPI_KEY=your_serpapi_key
-YOUTUBE_API_KEY=your_youtube_api_key
 ```
 
 ---
@@ -492,4 +499,4 @@ YOUTUBE_API_KEY=your_youtube_api_key
 3. **Quick Iteration**: 빠르게 만들고 계속 개선
 4. **Cost Free**: 완전 무료로 운영
 
-이 MVP는 **1주일 안에 완성**하여 실제 블로그 운영에 즉시 활용할 수 있도록 설계되었습니다.
+이 MVP는 **6일 안에 완성**하여 실제 블로그 운영에 즉시 활용할 수 있도록 설계되었습니다.

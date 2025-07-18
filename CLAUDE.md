@@ -53,10 +53,10 @@ blog-keyword/
 - **Frontend**: Next.js 15, TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes
 - **Database**: Supabase (PostgreSQL)
-- **APIs**: 네이버 검색광고/자동완성, Google Trends, YouTube Data API v3
+- **APIs**: 네이버 검색광고/자동완성, Google Trends (SerpAPI)
 - **Deployment**: Vercel
 
-## 📅 개발 일정 (7일)
+## 📅 개발 일정 (6일)
 
 ### Day 1: 프로젝트 초기 설정 ✅
 **목표**: Next.js 프로젝트 생성 및 Supabase 연동
@@ -146,22 +146,9 @@ blog-keyword/
 - 키워드 관심도 및 연관 검색어 조회
 - 데이터 파싱 및 정규화
 
-### Day 5: YouTube API 연동
-**목표**: YouTube 인기 급상승 동영상에서 키워드 추출
-**상세 가이드**: [DAY5_YOUTUBE_API_GUIDE.md](./docs/DAY5_YOUTUBE_API_GUIDE.md)
-
-**주요 파일**:
-- `lib/services/youtubeApi.ts` - YouTube 서비스
-- `app/api/youtube/trends/route.ts` - API Route
-
-**구현 기능**:
-- YouTube Data API v3 연동
-- 인기 동영상 50개 수집
-- 제목/태그에서 키워드 추출
-
-### Day 6: UI 구현
+### Day 5: UI 구현
 **목표**: 반응형 대시보드 UI 개발
-**상세 가이드**: [DAY6_UI_IMPLEMENTATION_GUIDE.md](./docs/DAY6_UI_IMPLEMENTATION_GUIDE.md)
+**상세 가이드**: [DAY5_UI_IMPLEMENTATION_GUIDE.md](./docs/DAY5_UI_IMPLEMENTATION_GUIDE.md)
 
 **주요 파일**:
 - `app/dashboard/page.tsx` - 대시보드 페이지
@@ -174,16 +161,16 @@ blog-keyword/
 - 수동 새로고침 버튼
 - CSV 다운로드
 
-### Day 7: 통합 테스트 및 배포
+### Day 6: 통합 테스트 및 배포
 **목표**: 전체 기능 통합 및 Vercel 배포
-**상세 가이드**: [DAY7_BASIC_UI_IMPLEMENTATION.md](./docs/DAY7_BASIC_UI_IMPLEMENTATION.md)
+**상세 가이드**: [DAY6_INTEGRATION_DEPLOYMENT.md](./docs/DAY6_INTEGRATION_DEPLOYMENT.md)
 
 **주요 파일**:
 - `app/api/collect/all/route.ts` - 통합 수집 API
 - `vercel.json` - 배포 설정
 
 **구현 기능**:
-- 모든 플랫폼 데이터 통합 수집
+- 네이버 + Google Trends 데이터 통합 수집
 - 중복 제거 및 점수 계산
 - Vercel 배포
 - 기본 문서화
@@ -243,11 +230,10 @@ vercel --prod
 
 | 기능 | 파일 경로 | 상태 | 우선순위 |
 |------|-----------|------|----------|
-| Supabase 연동 | `lib/supabase.ts` | ⏳ | P0 |
-| 네이버 검색광고 API | `lib/services/naverApi.ts` | ⏳ | P0 |
-| 네이버 자동완성 | `lib/services/naverAutoComplete.ts` | ⏳ | P0 |
-| Google Trends | `lib/services/googleTrends.ts` | ⏳ | P1 |
-| YouTube API | `lib/services/youtubeApi.ts` | ⏳ | P1 |
+| Supabase 연동 | `lib/supabase.ts` | ✅ | P0 |
+| 네이버 검색광고 API | `lib/services/naverApi.ts` | ✅ | P0 |
+| 네이버 자동완성 | `lib/services/naverAutoComplete.ts` | ✅ | P0 |
+| Google Trends | `lib/services/googleTrends.ts` | ✅ | P1 |
 | 대시보드 UI | `app/dashboard/page.tsx` | ⏳ | P0 |
 | 통합 수집 API | `app/api/collect/all/route.ts` | ⏳ | P0 |
 
@@ -265,9 +251,6 @@ NAVER_CUSTOMER_ID=               # 검색광고 고객 ID
 
 # SerpAPI (Google Trends)
 SERPAPI_KEY=                     # SerpAPI 키 (월 100회 무료)
-
-# YouTube API
-YOUTUBE_API_KEY=                 # YouTube Data API v3 키
 ```
 
 ## 📝 코드 스타일 가이드
@@ -282,7 +265,7 @@ export interface Keyword {
   competitionLevel: '낮음' | '중간' | '높음';
   cpc: number;
   score: number;
-  platform: 'naver' | 'google' | 'youtube';
+  platform: 'naver' | 'google';
   createdAt?: string;
 }
 
@@ -356,16 +339,15 @@ export default function KeywordCard({ keyword, onRefresh }: Props) {
 ## ✅ 개발 완료 체크리스트
 
 ### 필수 기능 (MVP)
-- [ ] Next.js 프로젝트 설정
-- [ ] Supabase 데이터베이스 연동
-- [ ] 네이버 검색광고 API 연동
-- [ ] 네이버 자동완성 구현
+- [x] Next.js 프로젝트 설정
+- [x] Supabase 데이터베이스 연동
+- [x] 네이버 검색광고 API 연동
+- [x] 네이버 자동완성 구현
+- [x] Google Trends 연동 (SerpAPI)
 - [ ] 기본 대시보드 UI
 - [ ] 데이터 수집 API 통합
 
 ### 추가 기능
-- [ ] Google Trends 연동 (SerpAPI)
-- [ ] YouTube API 연동
 - [ ] CSV 다운로드
 - [ ] 필터링 기능
 
