@@ -22,17 +22,20 @@
 
 ## **🎯 MVP 핵심 기능 (간소화)**
 
-### **1. Google Trends 기본 수집**
+### **1. Google Trends 기본 수집 (SerpAPI 활용)**
 
 #### **1.1 구현 방법**
-- **라이브러리**: google-trends-api (npm)
-- **수집 항목**: 일일 인기 검색어만 수집 (상세 분석은 Phase 2로)
+- **라이브러리**: serpapi (npm)
+- **무료 제한**: 월 100회까지 무료 (MVP 단계에 충분)
+- **수집 항목**: 일일/실시간 인기 검색어 수집
 
 #### **1.2 간단한 구현**
 ```javascript
-// 일일 트렌드만 수집
-const dailyTrends = await googleTrends.dailyTrends({
+// SerpAPI를 활용한 일일 트렌드 수집
+const results = await getJson({
+  engine: 'google_trends_trending_now',
   geo: 'KR',
+  api_key: process.env.SERPAPI_KEY,
 });
 ```
 
@@ -251,7 +254,7 @@ CREATE TABLE longtail_keywords (
 - **Day 1**: Next.js 프로젝트 설정, Supabase 연동
 - **Day 2**: 네이버 검색광고 API 연동
 - **Day 3**: 네이버 자동완성 구현
-- **Day 4**: Google Trends 기본 연동
+- **Day 4**: Google Trends 기본 연동 (SerpAPI 활용)
 - **Day 5**: YouTube API 연동
 - **Day 6**: UI 구현 (기본 대시보드)
 - **Day 7**: 테스트 및 배포
@@ -464,6 +467,7 @@ function CompetitionBadge({ level }) {
 **개발 시작 전 준비사항**:
 - [ ] Supabase 프로젝트 생성
 - [ ] 네이버 검색광고 API 키 발급
+- [ ] SerpAPI 계정 생성 및 키 발급 (월 100회 무료)
 - [ ] YouTube Data API 키 발급
 - [ ] Next.js 프로젝트 생성
 - [ ] 환경변수 설정 (.env.local)
@@ -475,6 +479,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
 NAVER_API_KEY=your_naver_api_key
 NAVER_SECRET_KEY=your_naver_secret_key
 NAVER_CUSTOMER_ID=your_customer_id
+SERPAPI_KEY=your_serpapi_key
 YOUTUBE_API_KEY=your_youtube_api_key
 ```
 

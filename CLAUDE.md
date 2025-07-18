@@ -70,7 +70,7 @@ blog-keyword/
 
 2. 필수 패키지 설치
    ```bash
-   pnpm add @supabase/supabase-js axios crypto-js
+   pnpm add @supabase/supabase-js axios crypto-js serpapi
    pnpm add -D @types/node
    ```
 
@@ -132,8 +132,8 @@ blog-keyword/
 - 검색광고 API 폴백
 - Rate limiting 대응
 
-### Day 4: Google Trends 연동
-**목표**: Google Trends 일일 인기 검색어 수집
+### Day 4: Google Trends 연동 (SerpAPI 활용)
+**목표**: SerpAPI를 활용한 Google Trends 일일/실시간 트렌드 수집
 **상세 가이드**: [DAY4_GOOGLE_TRENDS_GUIDE.md](./docs/DAY4_GOOGLE_TRENDS_GUIDE.md)
 
 **주요 파일**:
@@ -141,8 +141,9 @@ blog-keyword/
 - `app/api/google/trends/route.ts` - API Route
 
 **구현 기능**:
-- google-trends-api 패키지 활용
-- 일일 트렌드 수집 (한국)
+- SerpAPI 패키지 활용 (월 100회 무료)
+- 일일/실시간 트렌드 수집 (한국)
+- 키워드 관심도 및 연관 검색어 조회
 - 데이터 파싱 및 정규화
 
 ### Day 5: YouTube API 연동
@@ -192,7 +193,7 @@ blog-keyword/
 ### API 제한 대응
 1. **네이버 자동완성**: Rate limiting 있음, 실패 시 검색광고 API 폴백
 2. **YouTube API**: 일일 10,000 할당량, 배치 요청으로 최적화
-3. **Google Trends**: 비공식 API, 캐싱 필수
+3. **SerpAPI Google Trends**: 월 100회 무료, 초과 시 캐싱 데이터 활용
 
 ### 에러 핸들링
 ```typescript
@@ -262,6 +263,9 @@ NAVER_API_KEY=                   # 검색광고 API 키
 NAVER_SECRET_KEY=                # 검색광고 시크릿 키
 NAVER_CUSTOMER_ID=               # 검색광고 고객 ID
 
+# SerpAPI (Google Trends)
+SERPAPI_KEY=                     # SerpAPI 키 (월 100회 무료)
+
 # YouTube API
 YOUTUBE_API_KEY=                 # YouTube Data API v3 키
 ```
@@ -328,10 +332,21 @@ export default function KeywordCard({ keyword, onRefresh }: Props) {
 - Customer ID 확인
 - 타임스탬프 동기화 확인
 
+### SerpAPI 인증 실패
+- SERPAPI_KEY 환경 변수 설정 확인
+- API 키 유효성 확인
+- 월 사용량 초과 여부 확인
+
 ### 자동완성 API 차단
 - User-Agent 헤더 설정 확인
 - Referer 헤더 추가
 - Rate limiting 확인 (요청 간격 조절)
+
+### SerpAPI 에러 처리
+- HTTP 429: 사용량 초과 시 캐싱 데이터 활용
+- HTTP 401: API 키 확인 필요
+- HTTP 403: 계정 권한 문제 또는 계정 삭제
+- 대시보드에서 사용량 모니터링
 
 ### Supabase 연결 오류
 - 환경 변수 설정 확인
@@ -349,16 +364,17 @@ export default function KeywordCard({ keyword, onRefresh }: Props) {
 - [ ] 데이터 수집 API 통합
 
 ### 추가 기능
-- [ ] Google Trends 연동
+- [ ] Google Trends 연동 (SerpAPI)
 - [ ] YouTube API 연동
 - [ ] CSV 다운로드
 - [ ] 필터링 기능
 
 ### 배포
-- [ ] 환경 변수 설정
+- [ ] 환경 변수 설정 (SERPAPI_KEY 포함)
 - [ ] Vercel 배포
 - [ ] 도메인 연결
 - [ ] 모니터링 설정
+- [ ] SerpAPI 사용량 모니터링
 ---
 
 이 가이드를 참고하여 Claude Code에서 단계별로 개발을 진행하세요. 각 Day별 작업을 완료하면서 체크리스트를 업데이트하고, 문제 발생 시 트러블슈팅 가이드를 참조하세요.
