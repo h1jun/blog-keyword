@@ -238,7 +238,6 @@ interface KeywordData {
   keyword: string;
   googleScore: number;
   naverVolume: number;
-  youtubeScore: number;
   totalScore: number;
   competitionLevel: string;
   cpc: number;
@@ -294,14 +293,6 @@ export default function KeywordCard({ keyword }: { keyword: KeywordData }) {
                 <Search className="h-4 w-4 text-green-600" />
                 <span className="text-sm">
                   네이버: {keyword.naverVolume.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="h-4 w-4 text-red-600" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                <span className="text-sm">
-                  YouTube: {keyword.youtubeScore > 0 ? `${keyword.youtubeScore}점` : '데이터 없음'}
                 </span>
               </div>
             </div>
@@ -461,7 +452,6 @@ import {
   LayoutDashboard, 
   TrendingUp, 
   Search, 
-  Youtube, 
   BookmarkPlus,
   Settings,
   ChevronLeft
@@ -475,7 +465,6 @@ export default function Sidebar() {
     { icon: LayoutDashboard, label: '대시보드', href: '/dashboard' },
     { icon: TrendingUp, label: 'Google 트렌드', href: '/trends/google' },
     { icon: Search, label: '네이버 키워드', href: '/trends/naver' },
-    { icon: Youtube, label: 'YouTube 트렌드', href: '/trends/youtube' },
     { icon: BookmarkPlus, label: '북마크', href: '/bookmarks' },
     { icon: Settings, label: '설정', href: '/settings' }
   ];
@@ -603,7 +592,6 @@ export async function GET(request: NextRequest) {
       keyword: item.keyword,
       googleScore: item.google_score || 0,
       naverVolume: item.naver_volume || 0,
-      youtubeScore: item.youtube_score || 0,
       totalScore: item.total_score || 0,
       competitionLevel: item.competition_level || '중간',
       cpc: item.cpc || 0,
@@ -762,7 +750,6 @@ export function useResponsive() {
 - Day 2: 네이버 검색광고 API 연동 ✅
 - Day 3: 네이버 자동완성 구현 ✅
 - Day 4: Google Trends 연동 ✅
-- Day 5: YouTube API 연동 ✅
 - Day 6: 데이터 통합 로직 ✅
 - Day 7: 기본 UI 구현 ✅
 
