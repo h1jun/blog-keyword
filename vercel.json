@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    }
+  ],
+  "functions": {
+    "app/api/collect/all/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/google/trends/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/naver/keyword/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/longtail/generate/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}
