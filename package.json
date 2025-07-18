@@ -6,16 +6,22 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "env-check": "node scripts/env-check.js",
+    "test-apis": "node scripts/test-apis.js",
+    "deploy": "vercel --prod",
+    "deploy-preview": "vercel"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.51.0",
     "axios": "^1.10.0",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
+    "lucide-react": "^0.525.0",
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "recharts": "^3.1.0",
     "serpapi": "^2.1.0",
     "zod": "^4.0.5"
   },
